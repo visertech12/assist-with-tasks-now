@@ -82,6 +82,14 @@ const Help = () => {
     }
   ];
 
+  // Calculate view count for display
+  const formatViews = (views: number) => {
+    if (views >= 1000) {
+      return `${(views / 1000).toFixed(1)}k`;
+    }
+    return views.toString();
+  };
+
   // Filter tutorials based on search term and category
   const filterTutorials = (category: string) => {
     return tutorials
@@ -90,14 +98,6 @@ const Help = () => {
         (tutorial.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
          tutorial.description.toLowerCase().includes(searchTerm.toLowerCase()))
       );
-  };
-
-  // Calculate view count for display
-  const formatViews = (views: number) => {
-    if (views >= 1000) {
-      return `${(views / 1000).toFixed(1)}k`;
-    }
-    return views.toString();
   };
 
   return (

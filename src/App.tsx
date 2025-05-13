@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Kyc from "./pages/Kyc";
 import KycNotVerified from "./pages/KycNotVerified";
@@ -12,6 +12,7 @@ import ApplicationDetail from "./pages/admin/ApplicationDetail";
 import Achievements from "./pages/Achievements";
 import Help from "./pages/Help";
 import { Toaster } from "sonner";
+import Preloader from "./components/Preloader";
 
 const router = createBrowserRouter([
   {
@@ -58,8 +59,20 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate initial loading
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <>
+      {loading && <Preloader />}
       <RouterProvider router={router} />
       <Toaster position="top-right" />
     </>
