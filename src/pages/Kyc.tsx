@@ -15,6 +15,7 @@ import FaqSection from '@/components/kyc/FaqSection';
 import WhyKycSection from '@/components/kyc/WhyKycSection';
 import { Card, CardContent } from '@/components/ui/card';
 import { motion } from 'framer-motion';
+import NavigationBar from "@/components/NavigationBar";
 
 // Define schema for KYC form
 const kycFormSchema = z.object({
@@ -205,6 +206,8 @@ const Kyc = () => {
           </motion.div>
         </div>
       )}
+      
+      <NavigationBar />
       
       <div className="p-4">
         <div className="flex items-center justify-between mb-4">

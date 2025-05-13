@@ -9,6 +9,8 @@ import PendingApplications from "./pages/admin/PendingApplications";
 import ApprovedApplications from "./pages/admin/ApprovedApplications";
 import RejectedApplications from "./pages/admin/RejectedApplications";
 import ApplicationDetail from "./pages/admin/ApplicationDetail";
+import Achievements from "./pages/Achievements";
+import Help from "./pages/Help";
 import { Toaster } from "sonner";
 
 const router = createBrowserRouter([
@@ -44,6 +46,14 @@ const router = createBrowserRouter([
   {
     path: "/admin/applications/:id",
     element: <ApplicationDetail />,
+  },
+  {
+    path: "/achievements",
+    element: <Achievements />,
+  },
+  {
+    path: "/help",
+    element: <Help />,
   }
 ]);
 

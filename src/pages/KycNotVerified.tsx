@@ -1,14 +1,15 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { AlertTriangle, ShieldX, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import VerificationStatusBadge from '@/components/kyc/VerificationStatusBadge';
+import NavigationBar from "@/components/NavigationBar";
 
 const KycNotVerified = () => {
   return (
     <div className="min-h-screen max-w-md mx-auto bg-black text-white p-4 flex flex-col items-center justify-center">
+      <NavigationBar />
       <div className="w-full">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold">Identity Verification</h1>
