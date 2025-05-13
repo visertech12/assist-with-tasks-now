@@ -3,11 +3,15 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import AchievementCard from '@/components/AchievementCard';
 import AchievementBadge from '@/components/AchievementBadge';
-import { Zap, Star, TrendingUp, ArrowUp, Award } from 'lucide-react';
+import { Zap, Star, TrendingUp, ArrowUp, Award, Filter } from 'lucide-react';
 import { toast } from 'sonner';
+import NavigationBar from '@/components/NavigationBar';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 const Achievements = () => {
   const [displayedAchievements, setDisplayedAchievements] = useState<string>('all');
+  const isMobile = useIsMobile();
 
   // Sample achievement data
   const achievements = [
@@ -106,16 +110,54 @@ const Achievements = () => {
     });
   };
 
+  // Filter categories for the UI
+  const filterCategories = [
+    { id: 'all', label: 'All' },
+    { id: 'completed', label: 'Completed' },
+    { id: 'in-progress', label: 'In Progress' },
+    { id: 'trading', label: 'Trading' },
+    { id: 'deposit', label: 'Deposit' },
+    { id: 'social', label: 'Social' },
+    { id: 'special', label: 'Special' }
+  ];
+
+  // Mobile filter sheet content
+  const FilterSheetContent = () => (
+    <div className="pt-6">
+      <h3 className="text-lg font-semibold mb-4 px-2">Filter Achievements</h3>
+      <div className="flex flex-col gap-2 p-2">
+        {filterCategories.map(category => (
+          <button
+            key={category.id}
+            className={`w-full text-left px-4 py-3 rounded-lg ${
+              displayedAchievements === category.id 
+                ? 'bg-blue-500 text-white' 
+                : 'bg-zinc-800 text-gray-300'
+            }`}
+            onClick={() => {
+              setDisplayedAchievements(category.id);
+            }}
+          >
+            {category.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-zinc-950 text-white pb-12">
+      {/* Navigation Bar */}
+      <NavigationBar />
+      
       {/* Header Section */}
-      <div className="bg-gradient-to-b from-black to-zinc-900 pt-8 pb-12 px-4 md:px-8">
+      <div className="bg-gradient-to-b from-black to-zinc-900 pt-6 pb-10 px-4">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl md:text-4xl font-bold">Your Achievements</h1>
-          <p className="text-gray-400 mt-2">Track your progress and earn rewards</p>
+          <h1 className="text-2xl md:text-4xl font-bold">Your Achievements</h1>
+          <p className="text-gray-400 mt-1">Track your progress and earn rewards</p>
           
-          {/* Badge Showcase */}
-          <div className="flex flex-wrap gap-2 mt-6">
+          {/* Badge Showcase - Horizontal scrollable on mobile */}
+          <div className="flex gap-2 mt-4 overflow-x-auto pb-2 scrollbar-hide">
             <AchievementBadge icon={<Award className="text-white" />} variant="gold" delay={0.1} />
             <AchievementBadge icon={<Star className="text-white" />} variant="premium" delay={0.2} />
             <AchievementBadge icon={<TrendingUp className="text-white" />} delay={0.3} />
@@ -124,59 +166,51 @@ const Achievements = () => {
         </div>
       </div>
       
-      {/* Filter Controls */}
-      <div className="max-w-6xl mx-auto px-4 md:px-8 -mt-6">
-        <div className="bg-zinc-900 rounded-xl p-4 shadow-lg">
-          <div className="flex flex-wrap gap-2">
-            <FilterButton 
-              active={displayedAchievements === 'all'} 
-              onClick={() => setDisplayedAchievements('all')}
-            >
-              All
-            </FilterButton>
-            <FilterButton 
-              active={displayedAchievements === 'completed'} 
-              onClick={() => setDisplayedAchievements('completed')}
-            >
-              Completed
-            </FilterButton>
-            <FilterButton 
-              active={displayedAchievements === 'in-progress'} 
-              onClick={() => setDisplayedAchievements('in-progress')}
-            >
-              In Progress
-            </FilterButton>
-            <FilterButton 
-              active={displayedAchievements === 'trading'} 
-              onClick={() => setDisplayedAchievements('trading')}
-            >
-              Trading
-            </FilterButton>
-            <FilterButton 
-              active={displayedAchievements === 'deposit'} 
-              onClick={() => setDisplayedAchievements('deposit')}
-            >
-              Deposit
-            </FilterButton>
-            <FilterButton 
-              active={displayedAchievements === 'social'} 
-              onClick={() => setDisplayedAchievements('social')}
-            >
-              Social
-            </FilterButton>
-            <FilterButton 
-              active={displayedAchievements === 'special'} 
-              onClick={() => setDisplayedAchievements('special')}
-            >
-              Special
-            </FilterButton>
+      {/* Filter Controls - Desktop vs Mobile */}
+      <div className="max-w-6xl mx-auto px-4 -mt-6 relative z-10">
+        {isMobile ? (
+          <div className="flex justify-between items-center bg-zinc-900 rounded-xl p-4 shadow-lg">
+            <div className="text-sm text-gray-300">
+              {displayedAchievements === 'all' ? 'All Achievements' : 
+               displayedAchievements === 'completed' ? 'Completed' :
+               displayedAchievements === 'in-progress' ? 'In Progress' :
+               `${displayedAchievements.charAt(0).toUpperCase() + displayedAchievements.slice(1)}`}
+            </div>
+            
+            <Sheet>
+              <SheetTrigger asChild>
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-zinc-800 p-2 rounded-md"
+                >
+                  <Filter size={20} className="text-gray-300" />
+                </motion.button>
+              </SheetTrigger>
+              <SheetContent side="bottom" className="bg-zinc-900 text-white border-t border-zinc-800">
+                <FilterSheetContent />
+              </SheetContent>
+            </Sheet>
           </div>
-        </div>
+        ) : (
+          <div className="bg-zinc-900 rounded-xl p-4 shadow-lg">
+            <div className="flex flex-wrap gap-2">
+              {filterCategories.map(category => (
+                <FilterButton 
+                  key={category.id}
+                  active={displayedAchievements === category.id} 
+                  onClick={() => setDisplayedAchievements(category.id)}
+                >
+                  {category.label}
+                </FilterButton>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
       
-      {/* Achievements Grid */}
-      <div className="max-w-6xl mx-auto mt-8 px-4 md:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Achievements Grid - Single column on mobile, multi-column on larger screens */}
+      <div className="max-w-6xl mx-auto mt-6 px-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {filteredAchievements.map(achievement => (
             <AchievementCard 
               key={achievement.id}
