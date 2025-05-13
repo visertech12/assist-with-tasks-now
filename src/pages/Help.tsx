@@ -9,6 +9,14 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { BookOpen, Search, Youtube, Video } from 'lucide-react';
 
+// Helper function to format view counts
+const formatViews = (views: number) => {
+  if (views >= 1000) {
+    return `${(views / 1000).toFixed(1)}k`;
+  }
+  return views.toString();
+};
+
 const Help = () => {
   const [searchTerm, setSearchTerm] = useState('');
   
@@ -81,14 +89,6 @@ const Help = () => {
       date: "2023-05-30"
     }
   ];
-
-  // Calculate view count for display
-  const formatViews = (views: number) => {
-    if (views >= 1000) {
-      return `${(views / 1000).toFixed(1)}k`;
-    }
-    return views.toString();
-  };
 
   // Filter tutorials based on search term and category
   const filterTutorials = (category: string) => {
